@@ -1,0 +1,30 @@
+repository: git@github.com:symfony/symfony-demo.git
+environment:
+    development:
+        branch: dev
+        servers:
+            dev-server-1:
+                host: dev.host.com
+                user: demo
+                password: "%dev_password%"
+                path: /home/dev/
+                port: 22
+    production:
+        branch: master
+        servers:
+            prod-server-1:
+                host: prod-1.demo.com
+                user: demo
+                password: "%prod_password%"
+                path: /home/prod/
+            prod-server-2:
+                host: prod-2.demo.com
+                user: demo
+                ssh_key: /path/to/sshkey
+                path: /home/prod/
+            prod-server-3:
+                host: prod-3.demo.com
+                user: demo
+                ssh_key: /path/to/sshkey
+                password: "%prod_password%"
+                path: /home/prod/
