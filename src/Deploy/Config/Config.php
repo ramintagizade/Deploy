@@ -37,6 +37,14 @@ class Config {
         return $treeBuilder;
     }
 
+    public function getRepository() {
+        return $this->config["repository"];
+    }
+
+    public function getEnvironment(){
+        return $this->config["environment"];
+    }
+
 }
 
 
