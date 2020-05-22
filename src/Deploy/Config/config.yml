@@ -17,14 +17,16 @@ environment:
                 user: demo
                 password: "%prod_password%"
                 path: /home/prod/
+                port : 22
             prod-demo-2:
                 host: prod-2.demo.com
                 user: demo
-                ssh_key: /path/to/sshkey
+                password: "%prod_password%"
                 path: /home/prod/
+                port: 22
             prod-demo-3:
                 host: prod-3.demo.com
                 user: demo
-                ssh_key: /path/to/sshkey
                 password: "%prod_password%"
                 path: /home/prod/
+                port : 22

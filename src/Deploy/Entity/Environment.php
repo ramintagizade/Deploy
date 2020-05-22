@@ -1,7 +1,7 @@
 <?php
 namespace Deploy\Entity;
 
-class Enviroment {
+class Environment {
 
     private $name;
 
@@ -9,13 +9,13 @@ class Enviroment {
 
     private $servers;
 
-
+    
     public function setName(string $name) {
         $this->name = $name;
     }
 
     public function getName() {
-        return $name;
+        return $this->name;
     }
 
     public function setBranch(string $branch){
@@ -23,7 +23,7 @@ class Enviroment {
     }
 
     public function getBranch(){
-        return $branch;
+        return $this->branch;
     }
 
     public function setServers(array $servers) {
@@ -31,7 +31,7 @@ class Enviroment {
     }
 
     public function getServers(){
-        return $servers;
+        return $this->servers;
     }
 }
 ?>
