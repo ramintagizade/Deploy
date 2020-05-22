@@ -27,16 +27,6 @@ class Config {
         return $this->config;
     }
 
-    public function getConfigTreeBuilder()
-    {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('repository');
-
-        // add node definitions to the root of the tree
-        //$rootNode->
-        return $treeBuilder;
-    }
-
     public function getRepository() {
         return $this->config["repository"];
     }

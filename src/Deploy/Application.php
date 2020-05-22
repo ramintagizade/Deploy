@@ -5,6 +5,7 @@ namespace Deploy;
 use Deploy\Config\Config;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Config\Definition\Processor;
+use Deploy\Connect\Connection;
 
 class Application {
 
@@ -21,6 +22,8 @@ class Application {
 
         print_r($config->getConfig());
         
+        $con = new Connection();
+        //$con->
     }
 }
 
