@@ -4,7 +4,6 @@ namespace Deploy;
 
 use Deploy\Config\Config;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Config\Definition\Processor;
 use Deploy\Connect\Connection;
 use Deploy\Entity\Project;
 use Deploy\Entity\Platform;
@@ -31,12 +30,13 @@ class Application {
 
     }
     
-    public function deploy(Server $server, string $repository, string $branch) {
+    public function deploy(Server $server, string $repository, string $branch , string $name) {
         $host = $server->getHost();
         $user = $server->getUser();
         $password = $server->getPassword();
         $path = $server->getPath();
         $port = $server->getPort();
+        $server_name = $server->getName();
 
         $conn = new Connection($host,$port);
         $ssh = $conn->getSSHConnection();
@@ -47,11 +47,10 @@ class Application {
             $ssh->exec("[ ! -d $path ] && mkdir -p $path && cd $path && git clone ".$repository);
             $ssh->exec("cd $path && [ ! -d $project_dir ] && git clone ".$repository);
             $ssh->exec("cd $path && git pull origin $branch");
-
-            print_r("connected ...");
+            echo ("done with deploying to $server_name on platform $name \n");
         }
         else {
-            print_r("not connected ...");
+            echo "could not connect to server $server_name \n"; 
         }
     }
 
@@ -65,8 +64,9 @@ class Application {
         foreach($platforms as $platform) {
             $servers = $platform->getServers();
             $branch = $platform->getBranch();
+            $name = $platform->getName();
             foreach($servers as $server) {
-                $this->deploy($server,$repository,$branch);
+                $this->deploy($server,$repository,$branch,$name);
             }
         }
     }
@@ -94,6 +94,7 @@ class Application {
             foreach($server_names as $server_name) {
                 $cur_server = $servers[$server_name];
                 $server_object = new Server();
+                $server_object->setName($server_name);
                 $server_object->setHost($cur_server["host"]);
                 $server_object->setUser($cur_server["user"]);
                 $server_object->setPassword($cur_server["password"]);
@@ -109,7 +110,6 @@ class Application {
 
         $project->setPlatforms($current_platforms);
 
-        print_r($project);
         return $project;
         
     }

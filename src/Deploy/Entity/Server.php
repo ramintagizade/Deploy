@@ -16,7 +16,7 @@ class Server {
     }
 
     public function getName(){
-        return $name;
+        return $this->name;
     }
 
     public function setUser(string $user) {
