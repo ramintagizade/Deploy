@@ -19,12 +19,6 @@ class Application {
 
     public function run() {
 
-        echo "application running ... \n";
-
-        echo "reading config ... \n";
-        $config = new Config($this->file);
-        $config->parse();
-
         echo "starting deployment ...\n";
         $this->startDeployment();
 
