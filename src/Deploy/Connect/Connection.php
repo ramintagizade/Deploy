@@ -16,6 +16,10 @@ class Connection {
         $this->ssh = $ssh;
     }
 
+    public function getSSHConnection() {
+        return $this->ssh;
+    }
+
     public function setHost(string $host) {
         $this->host = $host;
     }

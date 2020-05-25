@@ -7,25 +7,26 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Config\Definition\Processor;
 use Deploy\Connect\Connection;
 use Deploy\Entity\Project;
-use Deploy\Entity\Environment;
+use Deploy\Entity\Platform;
 use Deploy\Entity\Server;
 
 class Application {
 
+    protected $file;
 
-    public function __construct() {
-        
+    public function __construct($file) {
+        $this->file = $file;
     }
 
     public function run() {
         echo "running ...";
 
-        $config = new Config();
+        $config = new Config($this->file);
         $config->parse();
 
-        print_r($config->getConfig());
+        //print_r($config->getConfig());
         
-        $con = new Connection('localhost','2222');
+        /*$con = new Connection('localhost','2222');
         $status = $con->login("vagrant","vagrant");
 
         print_r(array_keys($config->getEnvironment()));
@@ -35,27 +36,50 @@ class Application {
         else {
             print_r("not connected " .$status);
         }
+        */
 
         $this->readConfig();
+    }
+    
+    public function deploy(Server $server) {
+        $host = $server->getHost();
+        $user = $server->getUser();
+        $password = $server->getPassword();
+        $path = $server->getPath();
+        $port = $server->getPort();
+
+        $conn = new Connection($host,$port);
+        $status = $conn->login($user,$password);
+
+        if($status){
+            print_r("connected ...");
+        }
+        else {
+            print_r("not connected ...");
+        }
+    }
+
+    public function startDeployment() {
+        
     }
 
     public function readConfig() {
 
-        $config = new Config();
+        $config = new Config($this->file);
         $config->parse();
 
         $project = new Project();
         $project->setRepository($config->getRepository());
-        $current_environments = [];
+        $current_platforms = [];
 
-        $environment_names = array_keys($config->getEnvironment());
+        $platform_names = array_keys($config->getPlatform());
 
-        foreach($environment_names as $env) {
-            $cur_environment = $config->getEnvironment();
-            $environment = new Environment();
-            $environment->setName($env);
-            $environment->setBranch($cur_environment[$env]["branch"]);
-            $servers = $cur_environment[$env]["servers"];
+        foreach($platform_names as $plt) {
+            $cur_platform = $config->getPlatform();
+            $platform = new Platform();
+            $platform->setName($plt);
+            $platform->setBranch($cur_platform[$plt]["branch"]);
+            $servers = $cur_platform[$plt]["servers"];
             
             $current_servers = [];
             $server_names = array_keys($servers);
@@ -70,11 +94,12 @@ class Application {
                 array_push($current_servers,$server_object);
             }
 
-            $environment->setServers($current_servers);
-            array_push($current_environments, $environment);
+            $platform->setServers($current_servers);
+            array_push($current_platforms, $platform);
         }
 
-        print_r($current_environments);
+        print_r($current_platforms);
+        return $current_platforms;
         
     }
 

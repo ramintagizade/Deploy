@@ -4,21 +4,21 @@ namespace Deploy\Config;
 
 require 'vendor/autoload.php';
 
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Yaml\Parser;
 
 class Config {
 
     protected $yaml;
     protected $config;
+    protected $file;
 
-    public function __construct() {
+    public function __construct($file) {
+        $this->file = $file;
         $this->yaml = new Parser();
     }
 
     public function parse() {
-        $data = $this->yaml->parse(file_get_contents(__DIR__.'/config.yml'));
+        $data = $this->yaml->parse(file_get_contents($this->file));
         $this->config = $data;
         return $data;
     }
@@ -31,8 +31,8 @@ class Config {
         return $this->config["repository"];
     }
 
-    public function getEnvironment(){
-        return $this->config["environment"];
+    public function getPlatform() {
+        return $this->config["platform"];
     }
 
 }

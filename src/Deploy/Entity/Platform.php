@@ -1,7 +1,7 @@
 <?php
 namespace Deploy\Entity;
 
-class Environment {
+class Platform {
 
     private $name;
 

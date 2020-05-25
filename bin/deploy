@@ -6,6 +6,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 use Deploy\Application;
 
-$application = new Application();
+$file = $argv[1];
+$application = new Application($file);
 $application->run();
 
