@@ -31,7 +31,7 @@ class Application {
 
     }
     
-    public function deploy(Server $server) {
+    public function deploy(Server $server, string $repository, string $branch) {
         $host = $server->getHost();
         $user = $server->getUser();
         $password = $server->getPassword();
@@ -39,9 +39,15 @@ class Application {
         $port = $server->getPort();
 
         $conn = new Connection($host,$port);
+        $ssh = $conn->getSSHConnection();
         $status = $conn->login($user,$password);
-
+        $project_dir = basename($repository);
+        
         if($status){
+            $ssh->exec("[ ! -d $path ] && mkdir -p $path && cd $path && git clone ".$repository);
+            $ssh->exec("cd $path && [ ! -d $project_dir ] && git clone ".$repository);
+            $ssh->exec("cd $path && git pull origin $branch");
+
             print_r("connected ...");
         }
         else {
@@ -49,17 +55,23 @@ class Application {
         }
     }
 
+
+
     public function startDeployment() {
-        $platforms = $this->readConfig();
+        $project = $this->readProject();
+        $platforms = $project->getPlatforms();
+        $repository = $project->getRepository();
+
         foreach($platforms as $platform) {
             $servers = $platform->getServers();
+            $branch = $platform->getBranch();
             foreach($servers as $server) {
-                $this->deploy($server);
+                $this->deploy($server,$repository,$branch);
             }
         }
     }
 
-    public function readConfig() {
+    public function readProject() {
 
         $config = new Config($this->file);
         $config->parse();
@@ -92,10 +104,13 @@ class Application {
 
             $platform->setServers($current_servers);
             array_push($current_platforms, $platform);
+
         }
 
-        print_r($current_platforms);
-        return $current_platforms;
+        $project->setPlatforms($current_platforms);
+
+        print_r($project);
+        return $project;
         
     }
 

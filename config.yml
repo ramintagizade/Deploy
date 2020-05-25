@@ -1,4 +1,4 @@
-repository: git@github.com:symfony/symfony-demo.git
+repository: https://github.com/ramintagizade/Vagrantfile
 platform:
     development:
         branch: dev
