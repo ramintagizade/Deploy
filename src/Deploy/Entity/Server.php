@@ -47,6 +47,10 @@ class Server {
         $this->port = $port;
     }
 
+    public function getPort(){
+        return $this->port;
+    }
+
     public function setPath(string $path){
         $this->path = $path;
     }

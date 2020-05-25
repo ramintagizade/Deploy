@@ -19,26 +19,16 @@ class Application {
     }
 
     public function run() {
-        echo "running ...";
 
+        echo "application running ... \n";
+
+        echo "reading config ... \n";
         $config = new Config($this->file);
         $config->parse();
 
-        //print_r($config->getConfig());
-        
-        /*$con = new Connection('localhost','2222');
-        $status = $con->login("vagrant","vagrant");
+        echo "starting deployment ...\n";
+        $this->startDeployment();
 
-        print_r(array_keys($config->getEnvironment()));
-
-        if($status)
-            print_r("connected ");
-        else {
-            print_r("not connected " .$status);
-        }
-        */
-
-        $this->readConfig();
     }
     
     public function deploy(Server $server) {
@@ -60,7 +50,13 @@ class Application {
     }
 
     public function startDeployment() {
-        
+        $platforms = $this->readConfig();
+        foreach($platforms as $platform) {
+            $servers = $platform->getServers();
+            foreach($servers as $server) {
+                $this->deploy($server);
+            }
+        }
     }
 
     public function readConfig() {
